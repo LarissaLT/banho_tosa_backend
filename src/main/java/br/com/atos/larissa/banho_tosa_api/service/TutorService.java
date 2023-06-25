@@ -6,6 +6,7 @@ import br.com.atos.larissa.banho_tosa_api.model.Tutor;
 import br.com.atos.larissa.banho_tosa_api.repository.TutorRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service("tutorApi")
-public class TutorService {
+public class TutorService implements UserDetailsService {
 
     private final TutorRepository repository;
     private final TutorMapper mapper;
