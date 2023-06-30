@@ -46,10 +46,10 @@ public class TutorController {
         return service.atualizar(dados, id);
     }
 
-//    @DeleteMapping("/{id}")
-//    @ResponseBody
-//    @ResponseStatus(HttpStatus.OK)
-//    public void deletar(@PathVariable Long id){
-//        service.deletar(id);
-//    }
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public void deletar(@PathVariable Long id){
+        service.deletar(id);
+    }
 }

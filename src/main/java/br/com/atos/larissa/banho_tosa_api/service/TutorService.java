@@ -39,13 +39,13 @@ public class TutorService implements UserDetailsService {
     }
 
     public List<TutorDto> listar(){
-        List<Tutor> tutores = repository.findAll();
+        List<Tutor> tutores = repository.findAllByDeletedAtIsNull();
         List<TutorDto> dtos = mapper.toDto(tutores);
         return dtos;
     }
 
     public TutorDto buscar(Long id){
-        Optional<Tutor> op = repository.findById(id);
+        Optional<Tutor> op = repository.findByIdAndDeletedAtIsNull(id);
         Tutor tutor = op.orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Busca não encontrada"));
         TutorDto dto = mapper.toDto(tutor);
@@ -63,10 +63,10 @@ public class TutorService implements UserDetailsService {
         return dto;
     }
 
-//    public void deletar(Long id){
-//        if(!repository.existsById(id)){
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado");
-//        }
-//        repository.deleteById(id);
-//    }
+    public void deletar(Long id){
+        if(!repository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado");
+        }
+        repository.softDeleteById(id);
+    }
 }

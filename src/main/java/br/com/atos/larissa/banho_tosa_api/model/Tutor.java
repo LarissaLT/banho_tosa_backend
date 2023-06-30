@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,12 +26,12 @@ public class Tutor implements UserDetails {
     private Long id;
     private String nome;
     private String telefone;
-    @Column(unique = true)
     private String email;
     private String senha;
     private String endereco;
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
+    private LocalDateTime deletedAt;
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "tutor_id")
