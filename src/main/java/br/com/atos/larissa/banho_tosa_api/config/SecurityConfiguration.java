@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,7 +43,7 @@ public class SecurityConfiguration {
     // This is a Bean that configures the main security filter chain.
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http.cors(Customizer.withDefaults())
                 // Disables CSRF (Cross-Site Request Forgery) protection. This is often done for APIs since they
                 // are not vulnerable to CSRF in the same way web applications are.
                 .csrf(AbstractHttpConfigurer::disable)
