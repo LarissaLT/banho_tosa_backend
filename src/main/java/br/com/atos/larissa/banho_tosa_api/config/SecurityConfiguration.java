@@ -44,6 +44,9 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
+                .exceptionHandling(handler -> {
+                    handler.disable();
+                })
                 // Disables CSRF (Cross-Site Request Forgery) protection. This is often done for APIs since they
                 // are not vulnerable to CSRF in the same way web applications are.
                 .csrf(AbstractHttpConfigurer::disable)

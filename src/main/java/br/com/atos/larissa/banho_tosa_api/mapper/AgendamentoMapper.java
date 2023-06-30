@@ -1,7 +1,9 @@
 package br.com.atos.larissa.banho_tosa_api.mapper;
 
 import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoDto;
+import br.com.atos.larissa.banho_tosa_api.dto.TutorDto;
 import br.com.atos.larissa.banho_tosa_api.model.Agendamento;
+import br.com.atos.larissa.banho_tosa_api.model.Tutor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +19,7 @@ public class AgendamentoMapper {
                 agendamento.getServico(),
                 agendamento.getFuncionario(),
                 agendamento.getCachorro(),
-                agendamento.getTutor(),
+                new TutorDto(agendamento.getTutor().getId(), agendamento.getTutor().getNome(), agendamento.getTutor().getTelefone(), agendamento.getTutor().getEmail(), agendamento.getTutor().getSenha(), agendamento.getTutor().getEndereco(), agendamento.getTutor().getCachorros()),
                 agendamento.getPagamento());
         return dto;
     }
@@ -27,8 +29,9 @@ public class AgendamentoMapper {
         entity.setServico(dto.servico());
         entity.setFuncionario(dto.funcionario());
         entity.setCachorro(dto.cachorro());
-        entity.setTutor(dto.tutor());
+        entity.setTutor(Tutor.builder().email(dto.tutor().email()).id(dto.tutor().id()).nome(dto.tutor().nome()).telefone(dto.tutor().celular()).endereco(dto.tutor().endereco()).cachorros(dto.tutor().cachorros()).build());
         entity.setPagamento(dto.pagamento());
+        entity.setData(dto.data());
         return entity;
     }
 

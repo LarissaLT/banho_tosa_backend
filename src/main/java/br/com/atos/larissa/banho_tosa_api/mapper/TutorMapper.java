@@ -27,7 +27,7 @@ public class TutorMapper {
         entity.setNome(dto.nome());
         entity.setTelefone(dto.celular());
         entity.setEmail(dto.email());
-        entity.setEmail(dto.senha());
+        entity.setSenha(dto.senha());
         entity.setEndereco(dto.endereco());
         entity.setCachorros(dto.cachorros());
         return entity;

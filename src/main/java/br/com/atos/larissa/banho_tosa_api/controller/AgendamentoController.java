@@ -23,7 +23,8 @@ public class AgendamentoController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public AgendamentoDto cadastrar(@RequestBody AgendamentoDto dados){
-        return service.cadastrar(dados);
+        AgendamentoDto cadastrar = service.cadastrar(dados);
+        return cadastrar;
     }
 
     @GetMapping

@@ -15,7 +15,8 @@ public class Agendamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate data = LocalDate.parse("24/05/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    private LocalDate data;
+    // = LocalDate.parse("24/05/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
     @ManyToOne
     @JoinColumn(name = "servico_id")

@@ -2,7 +2,9 @@ package br.com.atos.larissa.banho_tosa_api.service;
 
 import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoDto;
 import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoFormDto;
+import br.com.atos.larissa.banho_tosa_api.dto.TutorDto;
 import br.com.atos.larissa.banho_tosa_api.mapper.AgendamentoMapper;
+import br.com.atos.larissa.banho_tosa_api.mapper.TutorMapper;
 import br.com.atos.larissa.banho_tosa_api.model.*;
 import br.com.atos.larissa.banho_tosa_api.repository.*;
 import org.springframework.http.HttpStatus;
@@ -20,16 +22,18 @@ public class AgendamentoService {
     private final FuncionarioRepository funcionarioRepository;
     private  final CachorroRepository cachorroRepository;
     private final TutorRepository tutorRepository;
+    private final TutorMapper tutorMapper;
     private final AgendamentoMapper mapper;
 
     public AgendamentoService(AgendamentoRepository repository, ServicoRepository servicoRepository,
                               FuncionarioRepository funcionarioRepository, CachorroRepository cachorroRepository,
-                              TutorRepository tutorRepository, AgendamentoMapper mapper) {
+                              TutorRepository tutorRepository, TutorMapper tutorMapper, AgendamentoMapper mapper) {
         this.repository = repository;
         this.servicoRepository = servicoRepository;
         this.funcionarioRepository = funcionarioRepository;
         this.cachorroRepository = cachorroRepository;
         this.tutorRepository = tutorRepository;
+        this.tutorMapper = tutorMapper;
         this.mapper = mapper;
     }
 
@@ -50,9 +54,11 @@ public class AgendamentoService {
         List<Servico> servicos = servicoRepository.findAll();
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         List<Tutor> tutores = tutorRepository.findAll();
+        List<TutorDto> tutoresDto = tutorMapper.toDto(tutores);
+
         List<Cachorro> cachorros = cachorroRepository.findAll();
 
-        AgendamentoFormDto agendamentoFormDto = new AgendamentoFormDto(servicos, funcionarios, tutores, cachorros);
+        AgendamentoFormDto agendamentoFormDto = new AgendamentoFormDto(servicos, funcionarios, tutoresDto, cachorros);
         return agendamentoFormDto;
     }
 

@@ -7,6 +7,6 @@ import java.util.List;
 public record AgendamentoFormDto(
         List<Servico> servicos,
         List<Funcionario> funcionarios,
-        List<Tutor> tutores,
+        List<TutorDto> tutores,
         List<Cachorro> cachorros){
 }
