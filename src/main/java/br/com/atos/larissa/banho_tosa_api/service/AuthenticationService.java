@@ -39,6 +39,7 @@ public class AuthenticationService {
 
         // The JWT is returned inside a JwtAuthenticationResponse object.
         return new JwtAuthenticationResponse(jwt);
+
     }
 
     // The 'signin' method handles user authentication.
@@ -51,6 +52,13 @@ public class AuthenticationService {
         // If authentication succeeds, we find the user in our UserRepository.
         var user = tutorRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+
+//        // Verifica o papel do usuário autenticado
+//        if (user.getRole() == RoleEnum.USER) {
+//            // Lógica para usuários comuns
+//        } else if (user.getRole() == RoleEnum.ADMIN) {
+//            // Lógica para administradores
+//        }
 
         // A JWT is generated for the authenticated user.
         var jwt = jwtService.generateToken(user);

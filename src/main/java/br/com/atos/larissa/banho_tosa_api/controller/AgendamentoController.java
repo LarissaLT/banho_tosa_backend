@@ -2,9 +2,12 @@ package br.com.atos.larissa.banho_tosa_api.controller;
 
 import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoDto;
 import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoFormDto;
+import br.com.atos.larissa.banho_tosa_api.model.Tutor;
 import br.com.atos.larissa.banho_tosa_api.service.AgendamentoService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +26,7 @@ public class AgendamentoController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public AgendamentoDto cadastrar(@RequestBody AgendamentoDto dados){
+
         AgendamentoDto cadastrar = service.cadastrar(dados);
         return cadastrar;
     }

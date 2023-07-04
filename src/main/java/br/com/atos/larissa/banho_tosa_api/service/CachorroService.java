@@ -3,6 +3,8 @@ package br.com.atos.larissa.banho_tosa_api.service;
 import br.com.atos.larissa.banho_tosa_api.dto.CachorroDto;
 import br.com.atos.larissa.banho_tosa_api.mapper.CachorroMapper;
 import br.com.atos.larissa.banho_tosa_api.model.Cachorro;
+import br.com.atos.larissa.banho_tosa_api.model.RoleEnum;
+import br.com.atos.larissa.banho_tosa_api.model.Tutor;
 import br.com.atos.larissa.banho_tosa_api.repository.CachorroRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,14 +25,25 @@ public class CachorroService {
     }
 
     public CachorroDto cadastrar (CachorroDto dados){
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
         Cachorro cachorro = mapper.toEntity(dados);
-        repository.save(cachorro);
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())){
+            cachorro.setTutor(usuarioLogado);
+        } else {
+            repository.save(cachorro);
+        }
         CachorroDto dto = mapper.toDto(cachorro);
         return dto;
     }
 
     public List<CachorroDto> listar(){
-        List<Cachorro> cachorros = repository.findAllByDeletedAtIsNull();
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
+        List<Cachorro> cachorros;
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
+            cachorros = repository.findByTutor_Id(usuarioLogado.getId());
+        } else {
+            cachorros = repository.findAllByDeletedAtIsNull();
+        }
         List<CachorroDto> dtos = mapper.toDto(cachorros);
         return dtos;
     }

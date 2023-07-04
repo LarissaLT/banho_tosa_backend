@@ -2,9 +2,12 @@ package br.com.atos.larissa.banho_tosa_api.service;
 
 import br.com.atos.larissa.banho_tosa_api.dto.TutorDto;
 import br.com.atos.larissa.banho_tosa_api.mapper.TutorMapper;
+import br.com.atos.larissa.banho_tosa_api.model.RoleEnum;
 import br.com.atos.larissa.banho_tosa_api.model.Tutor;
 import br.com.atos.larissa.banho_tosa_api.repository.TutorRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,15 +33,27 @@ public class TutorService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    static Tutor getUsuarioLogado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Tutor usuarioLogado = (Tutor) authentication.getPrincipal();
+        return usuarioLogado;
+    }
+
     public TutorDto cadastrar(TutorDto dados){
+        Tutor usuarioLogado = getUsuarioLogado();
         Tutor tutor = mapper.toEntity(dados);
         tutor.setSenha("123");
-        repository.save(tutor);
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())){
+            tutor.setId(getUsuarioLogado().getId());
+        } else {
+            repository.save(tutor);
+        }
         TutorDto dto = mapper.toDto(tutor);
         return dto;
     }
 
     public List<TutorDto> listar(){
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
         List<Tutor> tutores = repository.findAllByDeletedAtIsNull();
         List<TutorDto> dtos = mapper.toDto(tutores);
         return dtos;

@@ -1,5 +1,7 @@
 package br.com.atos.larissa.banho_tosa_api.service;
 
+import br.com.atos.larissa.banho_tosa_api.model.Tutor;
+import br.com.atos.larissa.banho_tosa_api.repository.TutorRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,10 +22,19 @@ public class JwtService {
     // Injects the JWT signing key from the application configuration.
     @Value("${token.signing.key}")
     private String jwtSigningKey;
+    private final TutorRepository tutorRepository;
+
+    public JwtService(TutorRepository tutorRepository) {
+        this.tutorRepository = tutorRepository;
+    }
 
     // This method takes a token and extracts the username from it.
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractUserId(String token) {
+        return extractClaim(token, Claims::getId);
     }
 
     // This method generates a token for a specific user.
@@ -47,7 +58,10 @@ public class JwtService {
     // This method generates a JWT token for a specific user with additional claims.
     // The token has a specific expiration date and is signed with a secret key.
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        Tutor tutor = (Tutor) userDetails;
+        extraClaims.put("role", tutor.getRole());
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+                .setId(tutor.getId().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 *60 * 24))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();

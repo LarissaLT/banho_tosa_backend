@@ -54,7 +54,8 @@ public class SecurityConfiguration {
                 // Configures authorization rules for incoming requests.
                 .authorizeHttpRequests(request ->
                         // Any request to "/api/v1/auth/**" i.e., it does not require authentication.
-                        request.requestMatchers("/api/v1/auth/**").permitAll()
+                        request.
+                                requestMatchers("/api/v1/auth/**").permitAll()
                                 // Any other request must be authenticated.
                                 .anyRequest().authenticated()
                 )

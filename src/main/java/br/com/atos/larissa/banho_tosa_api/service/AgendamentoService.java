@@ -8,6 +8,8 @@ import br.com.atos.larissa.banho_tosa_api.mapper.TutorMapper;
 import br.com.atos.larissa.banho_tosa_api.model.*;
 import br.com.atos.larissa.banho_tosa_api.repository.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,8 +22,9 @@ public class AgendamentoService {
     private final AgendamentoRepository repository;
     private final ServicoRepository servicoRepository;
     private final FuncionarioRepository funcionarioRepository;
-    private  final CachorroRepository cachorroRepository;
+    private final CachorroRepository cachorroRepository;
     private final TutorRepository tutorRepository;
+
     private final TutorMapper tutorMapper;
     private final AgendamentoMapper mapper;
 
@@ -37,20 +40,31 @@ public class AgendamentoService {
         this.mapper = mapper;
     }
 
-    public AgendamentoDto cadastrar(AgendamentoDto dados){
+    public AgendamentoDto cadastrar(AgendamentoDto dados) {
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
         Agendamento agendamento = mapper.toEntity(dados);
-        repository.save(agendamento);
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())){
+            agendamento.setTutor(usuarioLogado);
+        } else {
+            repository.save(agendamento);
+        }
         AgendamentoDto dto = mapper.toDto(agendamento);
         return dto;
     }
 
-    public List<AgendamentoDto> listar(){
-        List<Agendamento> agendamentos = repository.findAll();
+    public List<AgendamentoDto> listar() {
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
+        List<Agendamento> agendamentos;
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
+            agendamentos = repository.findByTutor_Id(usuarioLogado.getId());
+        } else {
+            agendamentos = repository.findAll();
+        }
         List<AgendamentoDto> dtos = mapper.toDto(agendamentos);
         return dtos;
     }
 
-    public AgendamentoFormDto buscarDadosForm(){
+    public AgendamentoFormDto buscarDadosForm() {
         List<Servico> servicos = servicoRepository.findAll();
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         List<Tutor> tutores = tutorRepository.findAll();
@@ -62,7 +76,7 @@ public class AgendamentoService {
         return agendamentoFormDto;
     }
 
-    public AgendamentoDto buscar(Long id){
+    public AgendamentoDto buscar(Long id) {
         Optional<Agendamento> op = repository.findById(id);
         Agendamento agendamento = op.orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Busca não encontrada"));
@@ -70,16 +84,21 @@ public class AgendamentoService {
         return dto;
     }
 
-    public AgendamentoDto atualizar(AgendamentoDto dados, Long id){
-        if(!repository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Não foi possível atualizar o agendamento");
+    public AgendamentoDto atualizar(AgendamentoDto dados, Long id) {
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
+        Agendamento agendamento = repository.findById(id).orElseThrow(() ->
+        new ResponseStatusException(HttpStatus.NOT_FOUND, "Agendamento não encontrado"));
+
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
+            if (!agendamento.getTutor().equals(usuarioLogado)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Não autorizado a atualizar o agendamento");
+            }
         }
-        Agendamento agendamento = mapper.toEntity(dados);
-        agendamento.setId(id);
         repository.save(agendamento);
         AgendamentoDto dto = mapper.toDto(agendamento);
         return dto;
     }
+
 
 //    public void deletar(Long id){
 //        if(!repository.existsById(id)){

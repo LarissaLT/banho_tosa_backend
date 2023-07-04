@@ -1,5 +1,6 @@
 package br.com.atos.larissa.banho_tosa_api.repository;
 
+import br.com.atos.larissa.banho_tosa_api.model.Agendamento;
 import br.com.atos.larissa.banho_tosa_api.model.Cachorro;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,8 @@ import java.util.Optional;
 
 @Repository
 public interface CachorroRepository extends JpaRepository<Cachorro,Long> {
+    List<Cachorro> findByTutor_Id(long id);
+
     //    @Query("FROM Cachorro f WHERE f.deletedAt=null")
     List<Cachorro> findAllByDeletedAtIsNull();
 

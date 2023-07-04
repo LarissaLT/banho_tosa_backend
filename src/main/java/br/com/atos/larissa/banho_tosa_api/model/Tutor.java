@@ -26,6 +26,7 @@ public class Tutor implements UserDetails {
     private Long id;
     private String nome;
     private String telefone;
+    @Column(unique = true)//NAO PODE REMOVER ESSA CONSTRAINT
     private String email;
     private String senha;
     private String endereco;
@@ -33,8 +34,7 @@ public class Tutor implements UserDetails {
     private RoleEnum role;
     private LocalDateTime deletedAt;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "tutor_id")
+    @OneToMany(mappedBy = "tutor", orphanRemoval = true)
     private List<Cachorro> cachorros = new ArrayList<>();
 
     @Override

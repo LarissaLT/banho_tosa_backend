@@ -19,4 +19,9 @@ public class Cachorro {
     @Enumerated(EnumType.STRING)
     private Genero genero;
     private LocalDateTime deletedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    private Tutor tutor;
+
 }
