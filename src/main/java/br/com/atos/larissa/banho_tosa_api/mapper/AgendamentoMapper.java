@@ -12,6 +12,12 @@ import java.util.stream.Collectors;
 @Service
 public class AgendamentoMapper {
 
+    private final CachorroMapper cachorroMapper;
+
+    public AgendamentoMapper(CachorroMapper cachorroMapper) {
+        this.cachorroMapper = cachorroMapper;
+    }
+
     public AgendamentoDto toDto(Agendamento agendamento) {
         AgendamentoDto dto = new AgendamentoDto(
                 agendamento.getId(),
@@ -19,7 +25,7 @@ public class AgendamentoMapper {
                 agendamento.getServico(),
                 agendamento.getFuncionario(),
                 agendamento.getCachorro(),
-                new TutorDto(agendamento.getTutor().getId(), agendamento.getTutor().getNome(), agendamento.getTutor().getTelefone(), agendamento.getTutor().getEmail(), agendamento.getTutor().getSenha(), agendamento.getTutor().getEndereco(), agendamento.getTutor().getCachorros()),
+                new TutorDto(agendamento.getTutor().getId(), agendamento.getTutor().getNome(), agendamento.getTutor().getTelefone(), agendamento.getTutor().getEmail(), agendamento.getTutor().getSenha(), agendamento.getTutor().getEndereco(), cachorroMapper.toDto(agendamento.getTutor().getCachorros())),
                 agendamento.getPagamento());
         return dto;
     }
@@ -29,7 +35,7 @@ public class AgendamentoMapper {
         entity.setServico(dto.servico());
         entity.setFuncionario(dto.funcionario());
         entity.setCachorro(dto.cachorro());
-        entity.setTutor(Tutor.builder().email(dto.tutor().email()).id(dto.tutor().id()).nome(dto.tutor().nome()).telefone(dto.tutor().celular()).endereco(dto.tutor().endereco()).cachorros(dto.tutor().cachorros()).build());
+        entity.setTutor(Tutor.builder().email(dto.tutor().email()).id(dto.tutor().id()).nome(dto.tutor().nome()).telefone(dto.tutor().celular()).endereco(dto.tutor().endereco()).cachorros(cachorroMapper.toEntity(dto.tutor().cachorros())).build());
         entity.setPagamento(dto.pagamento());
         entity.setData(dto.data());
         return entity;

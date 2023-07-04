@@ -28,7 +28,7 @@ public class TutorController {
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<TutorDto> cachorros(){
+    public List<TutorDto> listar(){
         return service.listar();
     }
 

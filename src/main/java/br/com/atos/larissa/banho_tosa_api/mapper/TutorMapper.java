@@ -9,6 +9,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class TutorMapper {
+    private final CachorroMapper cachorroMapper;
+
+    public TutorMapper(CachorroMapper cachorroMapper) {
+        this.cachorroMapper = cachorroMapper;
+    }
 
     public TutorDto toDto(Tutor tutor) {
         TutorDto dto = new TutorDto(
@@ -18,7 +23,7 @@ public class TutorMapper {
                 tutor.getEmail(),
                 tutor.getSenha(),
                 tutor.getEndereco(),
-                tutor.getCachorros());
+                cachorroMapper.toDto(tutor.getCachorros()));
         return dto;
     }
 
@@ -29,7 +34,7 @@ public class TutorMapper {
         entity.setEmail(dto.email());
         entity.setSenha(dto.senha());
         entity.setEndereco(dto.endereco());
-        entity.setCachorros(dto.cachorros());
+        entity.setCachorros(cachorroMapper.toEntity(dto.cachorros()));
         return entity;
     }
 

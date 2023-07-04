@@ -1,7 +1,9 @@
 package br.com.atos.larissa.banho_tosa_api.service;
 
+import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoDto;
 import br.com.atos.larissa.banho_tosa_api.dto.TutorDto;
 import br.com.atos.larissa.banho_tosa_api.mapper.TutorMapper;
+import br.com.atos.larissa.banho_tosa_api.model.Agendamento;
 import br.com.atos.larissa.banho_tosa_api.model.RoleEnum;
 import br.com.atos.larissa.banho_tosa_api.model.Tutor;
 import br.com.atos.larissa.banho_tosa_api.repository.TutorRepository;
@@ -40,20 +42,14 @@ public class TutorService implements UserDetailsService {
     }
 
     public TutorDto cadastrar(TutorDto dados){
-        Tutor usuarioLogado = getUsuarioLogado();
         Tutor tutor = mapper.toEntity(dados);
-        tutor.setSenha("123");
-        if (RoleEnum.USER.equals(usuarioLogado.getRole())){
-            tutor.setId(getUsuarioLogado().getId());
-        } else {
+        tutor.setSenha("123456");
             repository.save(tutor);
-        }
         TutorDto dto = mapper.toDto(tutor);
         return dto;
     }
 
     public List<TutorDto> listar(){
-        Tutor usuarioLogado = TutorService.getUsuarioLogado();
         List<Tutor> tutores = repository.findAllByDeletedAtIsNull();
         List<TutorDto> dtos = mapper.toDto(tutores);
         return dtos;
@@ -68,11 +64,15 @@ public class TutorService implements UserDetailsService {
     }
 
     public TutorDto atualizar(TutorDto dados, Long id){
-        if(!repository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Não foi possível atualizar o Tutor");
-        };
-        Tutor tutor = mapper.toEntity(dados);
-        tutor.setId(id);
+        Tutor usuarioLogado = getUsuarioLogado();
+        Tutor tutor = repository.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado"));
+
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
+            if (!tutor.equals(usuarioLogado)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Não autorizado a atualizar o tutor");
+            }
+        }
         repository.save(tutor);
         TutorDto dto = mapper.toDto(tutor);
         return dto;

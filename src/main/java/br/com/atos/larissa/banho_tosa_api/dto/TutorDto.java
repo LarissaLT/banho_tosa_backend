@@ -11,6 +11,6 @@ public record TutorDto(
         String email,
         String senha,
         String endereco,
-        List<Cachorro> cachorros){
+        List<CachorroDto> cachorros){
 
 }

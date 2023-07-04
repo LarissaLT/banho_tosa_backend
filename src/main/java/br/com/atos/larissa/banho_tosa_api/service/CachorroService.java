@@ -1,7 +1,9 @@
 package br.com.atos.larissa.banho_tosa_api.service;
 
+import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoDto;
 import br.com.atos.larissa.banho_tosa_api.dto.CachorroDto;
 import br.com.atos.larissa.banho_tosa_api.mapper.CachorroMapper;
+import br.com.atos.larissa.banho_tosa_api.model.Agendamento;
 import br.com.atos.larissa.banho_tosa_api.model.Cachorro;
 import br.com.atos.larissa.banho_tosa_api.model.RoleEnum;
 import br.com.atos.larissa.banho_tosa_api.model.Tutor;
@@ -29,9 +31,8 @@ public class CachorroService {
         Cachorro cachorro = mapper.toEntity(dados);
         if (RoleEnum.USER.equals(usuarioLogado.getRole())){
             cachorro.setTutor(usuarioLogado);
-        } else {
-            repository.save(cachorro);
         }
+        repository.save(cachorro);
         CachorroDto dto = mapper.toDto(cachorro);
         return dto;
     }
@@ -57,19 +58,29 @@ public class CachorroService {
     }
 
     public CachorroDto atualizar(CachorroDto dados, Long id){
-        if(!repository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Não foi possível atualizar o cachorro");
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
+        Cachorro cachorro = repository.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Cachorro não encontrado"));
+
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
+            if (!cachorro.getTutor().equals(usuarioLogado)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Não autorizado a atualizar o cachorro");
+            }
         }
-        Cachorro cachorro = mapper.toEntity(dados);
-        cachorro.setId(id);
         repository.save(cachorro);
         CachorroDto dto = mapper.toDto(cachorro);
         return dto;
     }
 
     public void deletar(Long id){
-        if(!repository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cachorro não encontrado");
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
+        Cachorro cachorro = repository.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Cachorro não encontrado"));
+
+        if(RoleEnum.USER.equals(usuarioLogado.getRole())) {
+            if(!cachorro.getTutor().equals(usuarioLogado)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Não autorizado a atualizar o cachorro");
+            }
         }
         repository.softDeleteById(id);
     }

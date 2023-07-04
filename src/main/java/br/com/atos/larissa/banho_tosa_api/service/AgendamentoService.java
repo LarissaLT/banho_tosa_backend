@@ -45,9 +45,8 @@ public class AgendamentoService {
         Agendamento agendamento = mapper.toEntity(dados);
         if (RoleEnum.USER.equals(usuarioLogado.getRole())){
             agendamento.setTutor(usuarioLogado);
-        } else {
-            repository.save(agendamento);
         }
+        repository.save(agendamento);
         AgendamentoDto dto = mapper.toDto(agendamento);
         return dto;
     }
