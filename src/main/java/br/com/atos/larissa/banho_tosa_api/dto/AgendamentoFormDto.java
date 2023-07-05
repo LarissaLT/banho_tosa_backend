@@ -8,5 +8,5 @@ public record AgendamentoFormDto(
         List<Servico> servicos,
         List<Funcionario> funcionarios,
         List<TutorDto> tutores,
-        List<Cachorro> cachorros){
+        List<CachorroDto> cachorros){
 }

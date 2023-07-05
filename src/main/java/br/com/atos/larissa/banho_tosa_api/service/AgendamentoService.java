@@ -4,12 +4,12 @@ import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoDto;
 import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoFormDto;
 import br.com.atos.larissa.banho_tosa_api.dto.TutorDto;
 import br.com.atos.larissa.banho_tosa_api.mapper.AgendamentoMapper;
+import br.com.atos.larissa.banho_tosa_api.mapper.CachorroMapper;
 import br.com.atos.larissa.banho_tosa_api.mapper.TutorMapper;
 import br.com.atos.larissa.banho_tosa_api.model.*;
 import br.com.atos.larissa.banho_tosa_api.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,10 +27,11 @@ public class AgendamentoService {
 
     private final TutorMapper tutorMapper;
     private final AgendamentoMapper mapper;
+    private final CachorroMapper cachorroMapper;
 
     public AgendamentoService(AgendamentoRepository repository, ServicoRepository servicoRepository,
                               FuncionarioRepository funcionarioRepository, CachorroRepository cachorroRepository,
-                              TutorRepository tutorRepository, TutorMapper tutorMapper, AgendamentoMapper mapper) {
+                              TutorRepository tutorRepository, TutorMapper tutorMapper, AgendamentoMapper mapper, CachorroMapper cachorroMapper) {
         this.repository = repository;
         this.servicoRepository = servicoRepository;
         this.funcionarioRepository = funcionarioRepository;
@@ -38,7 +39,9 @@ public class AgendamentoService {
         this.tutorRepository = tutorRepository;
         this.tutorMapper = tutorMapper;
         this.mapper = mapper;
+        this.cachorroMapper = cachorroMapper;
     }
+
 
     public AgendamentoDto cadastrar(AgendamentoDto dados) {
         Tutor usuarioLogado = TutorService.getUsuarioLogado();
@@ -71,13 +74,12 @@ public class AgendamentoService {
 
         List<Cachorro> cachorros = cachorroRepository.findAll();
 
-        AgendamentoFormDto agendamentoFormDto = new AgendamentoFormDto(servicos, funcionarios, tutoresDto, cachorros);
+        AgendamentoFormDto agendamentoFormDto = new AgendamentoFormDto(servicos, funcionarios, tutoresDto, cachorroMapper.toDto(cachorros));
         return agendamentoFormDto;
     }
 
     public AgendamentoDto buscar(Long id) {
-        Optional<Agendamento> op = repository.findById(id);
-        Agendamento agendamento = op.orElseThrow(() ->
+        Agendamento agendamento = repository.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Busca não encontrada"));
         AgendamentoDto dto = mapper.toDto(agendamento);
         return dto;

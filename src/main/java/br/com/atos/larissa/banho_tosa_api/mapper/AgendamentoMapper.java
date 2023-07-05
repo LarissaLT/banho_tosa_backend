@@ -3,6 +3,7 @@ package br.com.atos.larissa.banho_tosa_api.mapper;
 import br.com.atos.larissa.banho_tosa_api.dto.AgendamentoDto;
 import br.com.atos.larissa.banho_tosa_api.dto.TutorDto;
 import br.com.atos.larissa.banho_tosa_api.model.Agendamento;
+import br.com.atos.larissa.banho_tosa_api.model.Cachorro;
 import br.com.atos.larissa.banho_tosa_api.model.Tutor;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,14 @@ public class AgendamentoMapper {
     }
 
     public AgendamentoDto toDto(Agendamento agendamento) {
+        List<Cachorro> cachorros = agendamento.getTutor().getCachorros();
         AgendamentoDto dto = new AgendamentoDto(
                 agendamento.getId(),
                 agendamento.getData(),
                 agendamento.getServico(),
                 agendamento.getFuncionario(),
                 agendamento.getCachorro(),
-                new TutorDto(agendamento.getTutor().getId(), agendamento.getTutor().getNome(), agendamento.getTutor().getTelefone(), agendamento.getTutor().getEmail(), agendamento.getTutor().getSenha(), agendamento.getTutor().getEndereco(), cachorroMapper.toDto(agendamento.getTutor().getCachorros())),
+                new TutorDto(agendamento.getTutor().getId(), agendamento.getTutor().getNome(), agendamento.getTutor().getTelefone(), agendamento.getTutor().getEmail(), agendamento.getTutor().getSenha(), agendamento.getTutor().getEndereco(), cachorroMapper.toDto(cachorros)),
                 agendamento.getPagamento());
         return dto;
     }

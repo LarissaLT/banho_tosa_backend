@@ -10,9 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -34,7 +32,8 @@ public class Tutor implements UserDetails {
     private RoleEnum role;
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "tutor", orphanRemoval = true)
+    @OneToMany(orphanRemoval = true,fetch = FetchType.EAGER)
+    @JoinColumn(name = "tutor_id")
     private List<Cachorro> cachorros = new ArrayList<>();
 
     @Override

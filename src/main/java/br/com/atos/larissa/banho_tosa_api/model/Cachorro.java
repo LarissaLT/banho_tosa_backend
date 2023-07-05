@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -25,9 +27,5 @@ public class Cachorro {
     @Enumerated(EnumType.STRING)
     private Genero genero;
     private LocalDateTime deletedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "tutor_id")
-    private Tutor tutor;
 
 }

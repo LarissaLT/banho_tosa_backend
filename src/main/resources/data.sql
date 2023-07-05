@@ -1,6 +1,6 @@
 -- Inserção de dados
 INSERT INTO Tutor (nome, telefone, email, endereco, senha, role) VALUES ('Maria', '123456789', 'maria@example.com', 'Rua A, 123', '$2a$10$3Kooh4.8Rxvu/fJzpzWViuPhPZVqSbA6MKR1Pg03KVmZn.Y5MOg4O','USER'),
-                                                           ('Ana', '11122233344', 'ana@example.com', 'Rua B, 456', '$2a$10$3Kooh4.8Rxvu/fJzpzWViuPhPZVqSbA6MKR1Pg03KVmZn.Y5MOg4O','USER');
+                                                           ('Ana', '11122233344', 'ana@example.com', 'Rua B, 456', '$2a$10$3Kooh4.8Rxvu/fJzpzWViuPhPZVqSbA6MKR1Pg03KVmZn.Y5MOg4O','ADMIN');
 
 INSERT INTO Cachorro (nome, raca, idade, porte, genero, tutor_id, deleted_at) VALUES ('Rex', 'Labrador', 3, 'Grande', 'Macho', 1,null),
                                                                         ('Arya', 'American Staffordshire Terrier', 7, 'Grande', 'Fêmea', 1,null),
