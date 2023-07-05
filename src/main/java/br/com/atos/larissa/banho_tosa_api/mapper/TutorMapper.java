@@ -27,23 +27,25 @@ public class TutorMapper {
         return dto;
     }
 
-    public Tutor toEntity(TutorDto dto){
+    public Tutor toEntity(TutorDto dto) {
         Tutor entity = new Tutor();
         entity.setNome(dto.nome());
         entity.setTelefone(dto.celular());
         entity.setEmail(dto.email());
         entity.setSenha(dto.senha());
         entity.setEndereco(dto.endereco());
-        entity.setCachorros(cachorroMapper.toEntity(dto.cachorros()));
+        if (dto.cachorros() != null) {
+            entity.setCachorros(cachorroMapper.toEntity(dto.cachorros()));
+        }
         return entity;
     }
 
-    public List<TutorDto> toDto(List<Tutor> entities){
+    public List<TutorDto> toDto(List<Tutor> entities) {
         List<TutorDto> resultado = entities.stream().map(e -> toDto(e)).collect(Collectors.toList());
         return resultado;
     }
 
-    public List<Tutor> toEntity(List<TutorDto> dtos){
+    public List<Tutor> toEntity(List<TutorDto> dtos) {
         List<Tutor> resultado = dtos.stream().map(e -> toEntity(e)).collect(Collectors.toList());
         return resultado;
     }

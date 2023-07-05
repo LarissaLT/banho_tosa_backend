@@ -24,7 +24,7 @@ public interface CachorroRepository extends JpaRepository<Cachorro,Long> {
 
     //    @Query("FROM Cachorro f WHERE f.deletedAt=null and f.id =:id")
     Optional<Cachorro> findByIdAndDeletedAtIsNull(Long id);
-    @Query(value = "SELECT * fROM Cachorro f  WHERE f.id = :id and f.tutor_id = :tutorId",nativeQuery = true)
+    @Query(value = "SELECT * fROM Cachorro c  WHERE c.id = :id and c.tutor_id = :tutorId",nativeQuery = true)
     Optional<Cachorro> findByIdAndTutorId(Long id,Long tutorId);
     @Transactional
     @Modifying

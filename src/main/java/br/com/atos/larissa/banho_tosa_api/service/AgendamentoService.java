@@ -88,13 +88,15 @@ public class AgendamentoService {
     public AgendamentoDto atualizar(AgendamentoDto dados, Long id) {
         Tutor usuarioLogado = TutorService.getUsuarioLogado();
         Agendamento agendamento = repository.findById(id).orElseThrow(() ->
-        new ResponseStatusException(HttpStatus.NOT_FOUND, "Agendamento não encontrado"));
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Agendamento não encontrado"));
 
         if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
-            if (!agendamento.getTutor().equals(usuarioLogado)) {
+            if (!agendamento.getTutor().getId().equals(usuarioLogado.getId())) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Não autorizado a atualizar o agendamento");
             }
         }
+        agendamento = mapper.toEntity(dados);
+        agendamento.setId(id);
         repository.save(agendamento);
         AgendamentoDto dto = mapper.toDto(agendamento);
         return dto;

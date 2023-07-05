@@ -41,21 +41,21 @@ public class TutorService implements UserDetailsService {
         return usuarioLogado;
     }
 
-    public TutorDto cadastrar(TutorDto dados){
+    public TutorDto cadastrar(TutorDto dados) {
         Tutor tutor = mapper.toEntity(dados);
         tutor.setSenha("123456");
-            repository.save(tutor);
+        repository.save(tutor);
         TutorDto dto = mapper.toDto(tutor);
         return dto;
     }
 
-    public List<TutorDto> listar(){
+    public List<TutorDto> listar() {
         List<Tutor> tutores = repository.findAllByDeletedAtIsNull();
         List<TutorDto> dtos = mapper.toDto(tutores);
         return dtos;
     }
 
-    public TutorDto buscar(Long id){
+    public TutorDto buscar(Long id) {
         Optional<Tutor> op = repository.findByIdAndDeletedAtIsNull(id);
         Tutor tutor = op.orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Busca não encontrada"));
@@ -63,24 +63,34 @@ public class TutorService implements UserDetailsService {
         return dto;
     }
 
-    public TutorDto atualizar(TutorDto dados, Long id){
+    public TutorDto atualizar(TutorDto dados, Long id) {
         Tutor usuarioLogado = getUsuarioLogado();
-        Tutor tutor = repository.findById(id).orElseThrow(() ->
+        Tutor tutor;
+        repository.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado"));
 
         if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
-            if (!tutor.equals(usuarioLogado)) {
+            if (!usuarioLogado.getId().equals(id)) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Não autorizado a atualizar o tutor");
             }
         }
+
+        tutor = mapper.toEntity(dados);
+        tutor.setId(id);
         repository.save(tutor);
         TutorDto dto = mapper.toDto(tutor);
         return dto;
     }
 
-    public void deletar(Long id){
-        if(!repository.existsById(id)){
+    public void deletar(Long id) {
+        if (!repository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado");
+        }
+        Tutor usuarioLogado = getUsuarioLogado();
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
+            if (!usuarioLogado.getId().equals(id)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Não autorizado a atualizar o tutor");
+            }
         }
         repository.softDeleteById(id);
     }

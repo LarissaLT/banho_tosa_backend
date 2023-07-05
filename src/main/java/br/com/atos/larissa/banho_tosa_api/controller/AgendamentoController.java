@@ -44,7 +44,7 @@ public class AgendamentoController {
         return service.buscarDadosForm();
     }
 
-    @GetMapping("/{id})")
+    @GetMapping("/{id}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public AgendamentoDto buscar(@PathVariable Long id){
