@@ -23,6 +23,7 @@ public class TutorMapper {
                 tutor.getEmail(),
                 tutor.getSenha(),
                 tutor.getEndereco(),
+                tutor.getRole(),
                 cachorroMapper.toDto(tutor.getCachorros()));
         return dto;
     }
@@ -34,6 +35,7 @@ public class TutorMapper {
         entity.setEmail(dto.email());
         entity.setSenha(dto.senha());
         entity.setEndereco(dto.endereco());
+        entity.setRole(dto.role());
         if (dto.cachorros() != null) {
             entity.setCachorros(cachorroMapper.toEntity(dto.cachorros()));
         }
