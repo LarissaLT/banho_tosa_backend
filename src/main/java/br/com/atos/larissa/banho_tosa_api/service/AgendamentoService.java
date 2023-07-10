@@ -42,7 +42,6 @@ public class AgendamentoService {
         this.cachorroMapper = cachorroMapper;
     }
 
-
     public AgendamentoDto cadastrar(AgendamentoDto dados) {
         Tutor usuarioLogado = TutorService.getUsuarioLogado();
         Agendamento agendamento = mapper.toEntity(dados);
