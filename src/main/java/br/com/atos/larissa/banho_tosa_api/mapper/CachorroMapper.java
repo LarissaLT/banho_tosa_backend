@@ -23,6 +23,7 @@ public class CachorroMapper {
 
     public Cachorro toEntity(CachorroDto dto){
         Cachorro entity = new Cachorro();
+        entity.setId(dto.id());
         entity.setNome(dto.nome());
         entity.setRaca(dto.raca());
         entity.setIdade(dto.idade());

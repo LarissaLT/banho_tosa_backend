@@ -13,15 +13,13 @@ public class ServicoMapper {
     public ServicoDto toDto(Servico servico) {
         ServicoDto dto = new ServicoDto(
                 servico.getId(),
-                servico.getNome(),
-                servico.getPreco());
+                servico.getNome());
         return dto;
     }
 
     public Servico toEntity(ServicoDto dto){
         Servico entity = new Servico();
         entity.setNome(dto.nome());
-        entity.setPreco(dto.preco());
         return entity;
     }
 

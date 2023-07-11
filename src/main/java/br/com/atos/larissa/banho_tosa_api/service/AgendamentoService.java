@@ -66,12 +66,18 @@ public class AgendamentoService {
     }
 
     public AgendamentoFormDto buscarDadosForm() {
+        Tutor usuarioLogado = TutorService.getUsuarioLogado();
         List<Servico> servicos = servicoRepository.findAll();
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         List<Tutor> tutores = tutorRepository.findAll();
         List<TutorDto> tutoresDto = tutorMapper.toDto(tutores);
 
-        List<Cachorro> cachorros = cachorroRepository.findAll();
+        List<Cachorro> cachorros;
+        if (RoleEnum.USER.equals(usuarioLogado.getRole())) {
+            cachorros = usuarioLogado.getCachorros();
+        } else {
+            cachorros = cachorroRepository.findAll();
+        }
 
         AgendamentoFormDto agendamentoFormDto = new AgendamentoFormDto(servicos, funcionarios, tutoresDto, cachorroMapper.toDto(cachorros));
         return agendamentoFormDto;
