@@ -14,10 +14,10 @@ import java.util.Optional;
 @Repository
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
 //    @Query("FROM Funcionario f WHERE f.deletedAt=null")
-    List<Funcionario> findAllByDeletedAtIsNull();
+    List<Funcionario> findAllByDeletedAtIsNull(); //vai ignorar os deletados
 
 //    @Query("FROM Funcionario f WHERE f.deletedAt=null and f.id =:id")
-    Optional<Funcionario> findByIdAndDeletedAtIsNull(Long id);
+    Optional<Funcionario> findByIdAndDeletedAtIsNull(Long id); //vai ignorar os deletados
     @Transactional
     @Modifying
     @Query("UPDATE Funcionario f SET f.deletedAt = CURRENT_TIMESTAMP WHERE f.id = :id")

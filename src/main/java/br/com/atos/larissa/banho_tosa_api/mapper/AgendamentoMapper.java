@@ -36,8 +36,7 @@ public class AgendamentoMapper {
                 agendamento.getServico(),
                 agendamento.getFuncionario(),
                 agendamento.getCachorro(),
-                tutor,
-                agendamento.getPagamento());
+                tutor);
         return dto;
     }
 
@@ -49,7 +48,6 @@ public class AgendamentoMapper {
         if (dto.tutor() != null) {
             entity.setTutor(Tutor.builder().email(dto.tutor().email()).id(dto.tutor().id()).nome(dto.tutor().nome()).telefone(dto.tutor().celular()).endereco(dto.tutor().endereco()).cachorros(cachorroMapper.toEntity(dto.tutor().cachorros())).build());
         }
-        entity.setPagamento(dto.pagamento());
         entity.setData(dto.data());
         return entity;
     }

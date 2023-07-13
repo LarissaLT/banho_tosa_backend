@@ -11,6 +11,6 @@ public record AgendamentoDto(
         Servico servico,
         Funcionario funcionario,
         Cachorro cachorro,
-        TutorDto tutor,
-        Pagamento pagamento){
+        TutorDto tutor
+){
 }

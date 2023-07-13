@@ -33,10 +33,6 @@ public class Agendamento {
     @ManyToOne
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
-
-    @OneToOne()
-    @JoinColumn(name = "pagamento_id")
-    private Pagamento pagamento;
 }
 
 
